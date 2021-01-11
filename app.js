@@ -17,5 +17,4 @@ app.use('/api/users', userRouter);
 
 app.listen(port, () =>{
     console.log(`My app is listen on port ${port}`);
-    console.log(`User router is User`);
 });
