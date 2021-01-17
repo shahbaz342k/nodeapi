@@ -7,14 +7,15 @@ const userRouter = require('./users/user.router');
 app.use(express.json());
 app.use('/api/users', userRouter);
 
-// app.get("/api", (req, res) =>{
-//     res.json({
-//         success: true,
-//         message: "This is rest api"
-//     })
-// });
+app.get("/", (req, res) =>{
+    res.send('Hii this is home page')
+    // res.json({
+    //     success: true,
+    //     message: "This is rest api"
+    // })
+});
 
 
 app.listen(port, () =>{
-    console.log(`My app is listen on port ${port}`);
+    console.log(`My app is running on ports http://localshot:${port}`);
 });

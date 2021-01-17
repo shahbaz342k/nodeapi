@@ -1,7 +1,47 @@
-const { create, getUsers, getUserById, updateUser, deleteUser } = require('./user.service');
-const { genSaltSync,hashSync } = require('bcrypt');
+const { getUserByEmail, create, getUsers, getUserById, updateUser, deleteUser } = require('./user.service');
+const { hashSync, genSaltSync, compareSync } = require("bcrypt");
+const { sign } = require("jsonwebtoken");
 
 module.exports = {
+    // login admin for performing all 
+
+    login : (req, res) => {
+        const body = req.body;
+        getUserByEmail(body.email, (err, results) => {
+
+            if (err) {
+                 console.log(err);
+                 return res.json({
+                    status: 401 ,
+                    success: false,
+                    message: "Unauthorized User"
+                 });
+            }
+            if (!results) {
+                return res.json({
+                    status: 400,
+                    success:false,
+                    message: "invalid email or password"
+                })
+            }
+            const result = compareSync(body.password, results.password);
+            //const result = body.password;
+            if (result) {
+                results.password = undefined;
+                const jsontoken = sign( {result: results}, process.env.JWT_KEY, { expiresIn: "1h" } );
+                return res.json({
+                    success: true,
+                    message: "Login successfully",
+                    token: jsontoken
+                })
+            }else{
+                return res.json({
+                    success: false,
+                    data: "invalid email or password"    
+                })
+            }
+        });
+    },
     // for create user
     createUser : ( req, res ) => {
         const body = req.body;

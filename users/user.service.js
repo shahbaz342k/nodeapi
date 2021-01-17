@@ -3,6 +3,19 @@ const created_at = require('../inc/dateTime');
 //console.log(pool);
 
 module.exports = {
+    getUserByEmail : (email, callback) => {
+        pool.query(
+            `SELECT email, password FROM admin WHERE email = ?`,
+            [email],
+            (error, results) => {
+                if (error) {
+                    return callback(error);
+                }else{
+                    return callback(null, results[0]);
+                }
+            }
+            );
+    },
     create : (data, callback) => {
         pool.query( 
             `INSERT INTO users (name,email,password,gender,created_at) VALUES(?,?,?,?, '${created_at}')`, 
